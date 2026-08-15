@@ -17,12 +17,21 @@ namespace UsuariosApi.Controllers
             _usuarioService = usuarioService;
         } 
 
-        [HttpPost]
-        public async Task<IActionResult> CadastrarUsuario(
+        [HttpPost("registrar")]
+        public async Task<IActionResult> Registrar(
             [FromBody] CreateUsuarioDto dto)
         {
            await _usuarioService.Cadastra(dto);
             return Ok("Usuario cadastrado!");
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(
+            [FromBody] LoginUsuarioDto dto)
+        {
+            await _usuarioService.Login(dto);
+            return Ok("Usuario autenticado");
+
         }
     }
 }
