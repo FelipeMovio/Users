@@ -10,7 +10,7 @@ namespace UsuariosApi.Service;
 public class TokenService
 {
 
-    public void GenerateToken(Usuario usuario)
+    public string GenerateToken(Usuario usuario)
     {
         Claim[] _claims = new Claim[]
         {
@@ -33,6 +33,9 @@ public class TokenService
             claims: _claims,
             signingCredentials: _signingCredentials
             );
+
+        return new JwtSecurityTokenHandler()
+            .WriteToken (token);
      }
 }
 

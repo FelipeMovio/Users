@@ -36,7 +36,7 @@ namespace UsuariosApi.Service
             }
         }
 
-        internal async Task Login(LoginUsuarioDto dto)
+        internal async Task<String> Login(LoginUsuarioDto dto)
         {
             var resultado = 
                 await _singInMenager.PasswordSignInAsync
@@ -48,7 +48,15 @@ namespace UsuariosApi.Service
                     ("usuario nao autenticado");
             }
 
-            _tokenService.GenerateToken();
+            var usuario = _singInMenager
+                .UserManager
+                .Users
+                .FirstOrDefault(user => user.NormalizedUserName ==
+                dto.Username.ToUpper());
+
+            var token = _tokenService.GenerateToken(usuario);
+
+            return token;
         }
     }
 }
