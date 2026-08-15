@@ -26,6 +26,9 @@ builder.Services
     .AddEntityFrameworkStores<UsuarioDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services
+    .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 
 // Add services to the container.
