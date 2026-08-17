@@ -9,6 +9,11 @@ namespace UsuariosApi.Service;
 
 public class TokenService
 {
+    public IConfiguration _configuration;
+    public TokenService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
 
     public string GenerateToken(Usuario usuario)
     {
@@ -22,7 +27,7 @@ public class TokenService
         };
 
         var _chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
-            ("dnbn237g7823rg32gr"));
+            (_configuration["SymmetricSecurityKey"]));
 
         var _signingCredentials =
             new SigningCredentials

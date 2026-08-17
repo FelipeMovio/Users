@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // usando o provider MySQL (Pomelo). AutoDetect conecta no banco no startup pra
 // identificar a versão — se preferir não depender de conexão ativa na inicialização,
 // trocar por ServerVersion.Create(...) com a versão fixa.
-var connectionString = builder.Configuration.GetConnectionString("UsuarioApiConnection");
+var connectionString = builder.Configuration["ConnectionStrings:UsuarioApiConnection"];
 
 builder.Services
     .AddDbContext<UsuarioDbContext>(opts =>
@@ -58,7 +58,7 @@ builder.Services.AddAuthentication
             // (dotnet user-secrets em dev, variável de ambiente/Key Vault em prod).
             // Se essa chave vazar, qualquer um pode forjar tokens válidos.
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
-            ("dnbn237g7823rg32gr")),
+            (builder.Configuration["SymmetricSecurityKey"])),
             // ⚠️ Aceitável para estudo, mas em produção normalmente valida-se
             // Issuer/Audience para impedir reuso de tokens de outro contexto.
             ValidateAudience = false,
