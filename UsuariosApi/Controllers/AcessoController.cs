@@ -13,4 +13,7 @@ public class AcessoController : Controller
     {
         return Ok("Acesso permitido");
     }
+    // Exige que a policy "IdadeMinima" seja satisfeita para acessar esse endpoint.
+    // O ASP.NET vai rodar todos os AuthorizationHandlers registrados que sabem
+    // avaliar o requirement associado a essa policy (nesse caso, IdadeAuthorization)
 }

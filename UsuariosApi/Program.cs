@@ -35,6 +35,9 @@ builder.Services
 builder.Services
     .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Registra o handler que sabe avaliar o requirement IdadeMinima.
+// Precisa ser registrado como IAuthorizationHandler para o framework encontrá-lo
+// automaticamente na hora de avaliar qualquer policy que use esse requirement
 builder.Services
     .AddSingleton<IAuthorizationHandler, IdadeAuthorization>();
 
@@ -50,14 +53,22 @@ builder.Services.AddAuthentication
         new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
+            // ⚠️ PROBLEMA: chave de assinatura hardcoded no código-fonte.
+            // Deveria vir de appsettings (fora do Git) ou de um secret manager
+            // (dotnet user-secrets em dev, variável de ambiente/Key Vault em prod).
+            // Se essa chave vazar, qualquer um pode forjar tokens válidos.
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
             ("dnbn237g7823rg32gr")),
+            // ⚠️ Aceitável para estudo, mas em produção normalmente valida-se
+            // Issuer/Audience para impedir reuso de tokens de outro contexto.
             ValidateAudience = false,
             ValidateIssuer = false,
             ClockSkew = TimeSpan.Zero
         };
     });
 
+// Configura o middleware de AUTORIZAÇÃO (o que esse usuário pode fazer?).
+// Aqui declaramos a policy "IdadeMinima", exigindo o requirement IdadeMinima(18).
 builder.Services.AddAuthorization
     (options =>
     {
@@ -92,9 +103,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 
